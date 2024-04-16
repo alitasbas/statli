@@ -119,6 +119,7 @@ z.test <- function(x, mu = 0, sd = 1, n = 1, alternative = c("two-sided", "less"
     crit <- round(prob_to_z_score(1 - (alpha / 2), plot = F), 2)
     upper_crit <- crit; lower_crit <- -crit
     
+    prob <- 2 * round(1 - pnorm(abs(z)), 5)
     reject <- 1 - pnorm(abs(z)) < alpha / 2
     shaded_area <- normal_table[normal_table$x > upper_crit | normal_table$x < lower_crit, ]
     
@@ -126,6 +127,7 @@ z.test <- function(x, mu = 0, sd = 1, n = 1, alternative = c("two-sided", "less"
     crit <- round(prob_to_z_score(1 - alpha, plot = F), 2)
     lower_crit <- -Inf
     upper_crit <- crit
+    prob <- round(1 - pnorm(abs(z)), 5)
     
     reject <- pnorm(z) < alpha
     shaded_area <- normal_table[normal_table$x < -upper_crit, ]
@@ -134,6 +136,7 @@ z.test <- function(x, mu = 0, sd = 1, n = 1, alternative = c("two-sided", "less"
     crit <- round(prob_to_z_score(1 - alpha, plot = F), 2)
     lower_crit <- -crit
     upper_crit <- Inf
+    prob <- round(1 - pnorm(z), 5)
     
     reject <- 1 - pnorm(z) < alpha
     shaded_area <- normal_table[normal_table$x > -lower_crit, ]
@@ -157,8 +160,8 @@ z.test <- function(x, mu = 0, sd = 1, n = 1, alternative = c("two-sided", "less"
       geom_point(aes(x = z, y = 0.01), color = "darkolivegreen1", size = 2, alpha = 0.5)
     
     print(plot)
-    cat(paste("Hyp Test:", alternative, "\nPop mean:", mu, "Samp mean:", x, "\nAlpha:", alpha, "\nCritical Value: ∓", crit,
-              "\nTest Statistic:", z, "\nConfidence Int:", "(", paste0(confint, collapse = ","), ")", "\nProb:", 1 - round(pnorm(abs(z)), 5),
+    cat(paste("Hyp Test:", alternative, "\nPop mean:", mu, "Samp mean:", x, "\nAlpha:", alpha, "\nCritical Value: b", crit,
+              "\nTest Statistic:", z, "\nConfidence Int:", "(", paste0(confint, collapse = ","), ")", "\nProb:", prob, 5),
               "\nWe have sufficient evidence to reject Null Hyp."))
   } 
   else if (reject == F) {
@@ -173,8 +176,8 @@ z.test <- function(x, mu = 0, sd = 1, n = 1, alternative = c("two-sided", "less"
       geom_point(aes(x = z, y = 0.01), color = "darkolivegreen1", size = 2, alpha = 0.5)
     
     print(plot)
-    cat(paste("Hyp Test:", alternative, "\nPop mean:", mu, "Samp mean:", x, "\nAlpha:", alpha, "\nCritical Value: ∓", crit,
-              "\nTest Statistic:", z, "\nConfidence Int:", "(", paste0(confint, collapse = ","), ")", "\nProb:", 1 - round(pnorm(abs(z)), 5),
+    cat(paste("Hyp Test:", alternative, "\nPop mean:", mu, "Samp mean:", x, "\nAlpha:", alpha, "\nCritical Value: b", crit,
+              "\nTest Statistic:", z, "\nConfidence Int:", "(", paste0(confint, collapse = ","), ")", "\nProb:", prob, 5),
               "\nWe don't have sufficient evidence to reject Null Hyp."))
   }
   
@@ -248,7 +251,7 @@ t.test <- function(x, mu = 0, sd = 1, n = 2, alternative = c("two-sided", "less"
       geom_point(aes(x = t, y = 0.01), color = "darkolivegreen1", size = 2, alpha = 0.5)
     
     print(plot)
-    cat(paste("Hyp Test:", alternative, "\nPop mean:", mu, "Samp mean:", x, "\nDF:", n-1, "\nAlpha:", alpha, "\nCritical Value: ∓", crit,
+    cat(paste("Hyp Test:", alternative, "\nPop mean:", mu, "Samp mean:", x, "\nDF:", n-1, "\nAlpha:", alpha, "\nCritical Value: b", crit,
               "\nTest Statistic:", t, "\nConfidence Int:", "(", paste0(confint, collapse = ","), ")", "\nProb:", prob,
               "\nWe have sufficient evidence to reject Null Hyp."))
   } 
@@ -264,7 +267,7 @@ t.test <- function(x, mu = 0, sd = 1, n = 2, alternative = c("two-sided", "less"
       geom_point(aes(x = t, y = 0.01), color = "darkolivegreen1", size = 2, alpha = 0.5)
     
     print(plot)
-    cat(paste("Hyp Test:", alternative, "\nPop mean:", mu, "Samp mean:", x, "\nDF:", n-1, "\nAlpha:", alpha, "\nCritical Value: ∓", crit,
+    cat(paste("Hyp Test:", alternative, "\nPop mean:", mu, "Samp mean:", x, "\nDF:", n-1, "\nAlpha:", alpha, "\nCritical Value: b", crit,
               "\nTest Statistic:", t, "\nConfidence Int:", "(", paste0(confint, collapse = ","), ")", "\nProb:", prob,
               "\nWe Don't have sufficient evidence to reject Null Hyp."))
   }
@@ -316,11 +319,11 @@ prop.test <- function(x, n, pi, alternative = c("two-sided", "greater", "less"),
   }
   
   if (reject) {  
-    cat(paste("Hyp Test:", alternative, "\nPop mean:", pi, "Samp mean:", pi_hat, "\nAlpha:", alpha, "\nCritical Value: ∓", upper_crit,
+    cat(paste("Hyp Test:", alternative, "\nPop mean:", pi, "Samp mean:", pi_hat, "\nAlpha:", alpha, "\nCritical Value: b", upper_crit,
               "\nTest Statistic:", test_stat, "\nConfidence Int:", "(", paste0(confint, collapse = ","), ")", "\nProb:", 1 - round(pnorm(abs(test_stat)), 5),
               "\nWe have sufficient evidence to reject Null Hyp."))
   } else if (reject == F) {
-    cat(paste("Hyp Test:", alternative, "\nPop mean:", pi, "Samp mean:", pi_hat, "\nAlpha:", alpha, "\nCritical Value: ∓", upper_crit,
+    cat(paste("Hyp Test:", alternative, "\nPop mean:", pi, "Samp mean:", pi_hat, "\nAlpha:", alpha, "\nCritical Value: b", upper_crit,
               "\nTest Statistic:", test_stat, "\nConfidence Int:", "(", paste0(confint, collapse = ","), ")", "\nProb:", 1 - round(pnorm(abs(test_stat)), 5),
               "\nWe Don't have sufficient evidence to reject Null Hyp."))
   }
@@ -486,7 +489,7 @@ two_sample.z_test <- function(x1, x2, s1, s2, n1, n2, alternative = c("two-sided
       geom_point(aes(x = z, y = 0.01), color = "darkolivegreen1", size = 2, alpha = 0.5)
     
     print(plot)
-    cat(paste("Hyp Test:", alternative, "Samp means:", x1, x2, "\nAlpha:", alpha, "\nCritical Value: ∓", crit,
+    cat(paste("Hyp Test:", alternative, "Samp means:", x1, x2, "\nAlpha:", alpha, "\nCritical Value: b", crit,
               "\nTest Statistic:", z, "\nConfidence Int:", "(", paste0(confint, collapse = ","), ")", "\nProb:", 1 - round(pnorm(abs(z)), 3),
               "\nWe have sufficient evidence to reject Null Hyp."))
   }
@@ -502,7 +505,7 @@ two_sample.z_test <- function(x1, x2, s1, s2, n1, n2, alternative = c("two-sided
       geom_point(aes(x = z, y = 0.01), color = "darkolivegreen1", size = 2, alpha = 0.5)
     
     print(plot)
-    cat(paste("Hyp Test:", alternative,"Samp means:", x1, x2, "\nAlpha:", alpha, "\nCritical Value: ∓", crit,
+    cat(paste("Hyp Test:", alternative,"Samp means:", x1, x2, "\nAlpha:", alpha, "\nCritical Value: b", crit,
               "\nTest Statistic:", z, "\nConfidence Int:", "(", paste0(confint, collapse = ","), ")", "\nProb:", 1 - round(pnorm(abs(z)), 3),
               "\nWe don't have sufficient evidence to reject Null Hyp."))
   }
@@ -584,7 +587,7 @@ two_sample.t_test <- function(x1, x2, s1, s2, n1, n2, alternative = c("two-sided
       geom_point(aes(x = t, y = 0.01), color = "darkolivegreen1", size = 2, alpha = 0.5)
     
     print(plot)
-    cat(paste("Hyp Test:", alternative, "\nSamp means:", x1, x2, "\nDF:", df, "\nAlpha:", alpha, "\nCritical Value: ∓", crit,
+    cat(paste("Hyp Test:", alternative, "\nSamp means:", x1, x2, "\nDF:", df, "\nAlpha:", alpha, "\nCritical Value: b", crit,
               "\nTest Statistic:", t, "\nConfidence Int:", "(", paste0(confint, collapse = ","), ")", "\nProb:", 1 - round(pt(abs(t), df), 3),
               "\nWe have sufficient evidence to reject Null Hyp."))
   }
@@ -600,7 +603,7 @@ two_sample.t_test <- function(x1, x2, s1, s2, n1, n2, alternative = c("two-sided
       geom_point(aes(x = t, y = 0.01), color = "darkolivegreen1", size = 2, alpha = 0.5)
     
     print(plot)
-    cat(paste("Hyp Test:", alternative,"\nSamp means:", x1, x2, "\nDF:", df, "\nAlpha:", alpha, "\nCritical Value: ∓", crit,
+    cat(paste("Hyp Test:", alternative,"\nSamp means:", x1, x2, "\nDF:", df, "\nAlpha:", alpha, "\nCritical Value: b", crit,
               "\nTest Statistic:", t, "\nConfidence Int:", "(", paste0(confint, collapse = ","), ")", "\nProb:", 1 - round(pt(abs(t), df), 3),
               "\nWe don't have sufficient evidence to reject Null Hyp."))
   }
